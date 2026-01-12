@@ -8,6 +8,9 @@ env:
   GCP_PROJECT_ID: notely-484111
   DOCKER_IMAGE_URL: us-central1-docker.pkg.dev/notely-484111/notely-ar-repo/notely:latest
 
+options:
+  logging: CLOUD_LOGGING_ONLY
+
 jobs:
   deploy:
     name: Deploy
