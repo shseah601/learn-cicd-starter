@@ -7,6 +7,7 @@ on:
 env:
   GCP_PROJECT_ID: notely-484111
   DOCKER_IMAGE_URL: us-central1-docker.pkg.dev/notely-484111/notely-ar-repo/notely:latest
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
 jobs:
   deploy:
@@ -16,6 +17,11 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v4
+
+      - name: Set up Goose
+        uses: mscno/setup-goose@v1
+        with:
+          version: "3.26.0"
 
       - name: Set up Go
         uses: actions/setup-go@v5
@@ -33,6 +39,9 @@ jobs:
 
       - name: Build Container Image
         run: gcloud builds submit . --tag ${{ env.DOCKER_IMAGE_URL }} --suppress-logs
+
+      - name: Migrate Database
+        run: ./scripts/migrateup.sh
 
       - name: Deploy to Cloud Run
         run: gcloud run deploy notely --image ${{ env.DOCKER_IMAGE_URL }} --region us-central1 --allow-unauthenticated --project ${{ env.GCP_PROJECT_ID }} --max-instances=4
