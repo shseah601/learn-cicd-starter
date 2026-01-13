@@ -21,7 +21,7 @@ jobs:
       - name: Set up Goose
         uses: mscno/setup-goose@v1
         with:
-          version: "3.26.0"
+          version: "v3.26.0"
 
       - name: Set up Go
         uses: actions/setup-go@v5
